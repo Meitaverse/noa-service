@@ -1,0 +1,11 @@
+server:
+  port: 8360
+
+spring:
+  application:
+    name: noa-service
+
+spring.data.mongodb:
+  host: 127.0.0.1
+  port: 27017
+  database: noa
