@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/v1/")
+@RestController
 public class EventController {
     @Autowired
     private EventService eventService;
 
-    @PostMapping("create_event")
+    @PostMapping("/v1/create_event")
     private BaseResp createEvent() {
         return new BaseResp();
     }
