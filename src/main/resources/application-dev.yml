@@ -6,6 +6,6 @@ spring:
     name: noa-service
 
 spring.data.mongodb:
-  host: 127.0.0.1
+  host: mongodb
   port: 27017
   database: noa

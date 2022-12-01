@@ -1,0 +1,17 @@
+version: "3"
+services:
+  mongodb:
+    image: mongo:3.2.4
+    container_name: "mongodb"
+    volumes:
+      - ./data/db:/data/db    
+    ports:
+      - 27017:27017
+    command: --smallfiles
+  api:
+    image: noa-service:1.0-SNAPSHOT
+    container_name: "noa-service"
+    ports:
+      - 8360:8360
+    links:
+      - mongodb

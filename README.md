@@ -45,6 +45,8 @@
         运行 mvn package  
         成功后在target目录下会生产 jar 包  
     2. build docker  
-       运行 mvn dockerfile:build
+       运行 sudo mvn dockerfile:build
     3. 启动
-        运行 docker run -d noa-service:1.0-SNAPSHOT -p 8360:8360
+        运行 mkdir -p data/db
+        运行 docker-compose up -d
+
