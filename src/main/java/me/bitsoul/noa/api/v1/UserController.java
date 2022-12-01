@@ -1,5 +1,6 @@
 package me.bitsoul.noa.api.v1;
 
+import io.swagger.annotations.ApiOperation;
 import me.bitsoul.noa.dto.UserDTO;
 import me.bitsoul.noa.dto.resp.BaseResp;
 import me.bitsoul.noa.service.UserService;
@@ -12,6 +13,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @ApiOperation("注册登录接⼝")
     @PostMapping("/signin")
     public BaseResp signIn() {
         return new BaseResp();
