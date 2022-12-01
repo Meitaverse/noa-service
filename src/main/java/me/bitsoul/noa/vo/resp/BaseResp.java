@@ -1,4 +1,4 @@
-package me.bitsoul.noa.dto.resp;
+package me.bitsoul.noa.vo.resp;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;

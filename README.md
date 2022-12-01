@@ -50,3 +50,7 @@
         运行 mkdir -p data/db
         运行 docker-compose up -d
 
+        运行 docker run -d noa-service:1.0-SNAPSHOT -p 8360:8360
+
+### 3.4 接口文档
+     swagger http://${ip}:8360/swagger-ui.html 或者 https://${base_url}/swagger-ui.html
