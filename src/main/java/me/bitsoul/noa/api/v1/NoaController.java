@@ -1,7 +1,7 @@
 package me.bitsoul.noa.api.v1;
 
 import io.swagger.annotations.ApiOperation;
-import me.bitsoul.noa.dto.resp.BaseResp;
+import me.bitsoul.noa.vo.resp.BaseResp;
 import me.bitsoul.noa.service.NoaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
