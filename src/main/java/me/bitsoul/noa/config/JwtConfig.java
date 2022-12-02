@@ -20,7 +20,11 @@ public class JwtConfig {
     private String secret;
     private Long expirationSecond;
 
-
+    @Bean
+    public JWTVerifier jwtVerifier() throws UnsupportedEncodingException {
+        Algorithm algorithm = Algorithm.HMAC256(secret);
+        return JWT.require(algorithm).build();
+    }
 
     public String getSecret() {
         return secret;

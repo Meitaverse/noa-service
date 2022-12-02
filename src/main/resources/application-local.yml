@@ -9,3 +9,7 @@ spring.data.mongodb:
   host: mongodb
   port: 27017
   database: noa
+
+jwt:
+  secret: !noa@=9
+  expiration-second: 604800

@@ -29,7 +29,7 @@ public class JwtUtils {
 
     @Autowired
     private JwtConfig jwtConfig;
-    //@Autowired
+    @Autowired
     private JWTVerifier jwtVerifier;
 
     /**
