@@ -21,6 +21,11 @@ public class IdSequenceDAO extends BaseDAO<IdSequenceDO> {
         super(mongoTemplate, IdSequenceDO.class);
     }
 
+    /**
+     * 获取新的id（不保证连续）
+     * @param scene
+     * @return
+     */
     public Long getNextId(String scene){
         Query query = Query.query(Criteria.where(IdSequenceDO.FIELD_SCENE).is(scene));
         Update update = new Update();
