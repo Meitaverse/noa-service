@@ -11,5 +11,5 @@ spring.data.mongodb:
   database: noa
 
 jwt:
-  secret: !noa@=9
+  secret: noa@=9!
   expiration-second: 604800
