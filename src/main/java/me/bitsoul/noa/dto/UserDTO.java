@@ -12,10 +12,10 @@ public class UserDTO {
     private String walletAddress;
 
     /**
-     * ⽤⼾验签之后的令牌
+     * ⽤⼾id
      */
-    @JsonProperty("jwt")
-    private String jwt;
+    @JsonProperty("user_id")
+    private Long userId;
 
     /**
      * 0- 普通⽤⼾，1-组织者
@@ -41,12 +41,12 @@ public class UserDTO {
         this.walletAddress = walletAddress;
     }
 
-    public String getJwt() {
-        return jwt;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setJwt(String jwt) {
-        this.jwt = jwt;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public UserTypeEnum getUserType() {
@@ -77,7 +77,7 @@ public class UserDTO {
     public String toString() {
         return "UserDTO{" +
                 "walletAddress='" + walletAddress + '\'' +
-                ", jwt='" + jwt + '\'' +
+                ", userId=" + userId +
                 ", userType=" + userType +
                 ", createAt=" + createAt +
                 ", updatedAt=" + updatedAt +

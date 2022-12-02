@@ -11,21 +11,22 @@ import static me.bitsoul.noa.constant.FieldConstant.*;
 public class UserDO {
 
     public static final String FIELD_WALLET_ADDRESS = "wallet_address";
-    public static final String FIELD_JWT = "jwt";
+    public static final String FIELD_USE_ID = "user_id";
     public static final String FIELD_USER_TYPE = "user_type";
 
     /**
      * ⻓度为42 ⽤⼾钱包地址
      */
-    @Indexed
+    @Indexed(unique = true)
     @Field(FIELD_WALLET_ADDRESS)
     private String walletAddress;
 
     /**
-     * ⻓度为250 ⽤⼾验签之后的令牌
+     * 用户id
      */
-    @Field(FIELD_JWT)
-    private String jwt;
+    @Indexed(unique = true)
+    @Field(FIELD_USE_ID)
+    private Long userId;
 
     /**
      * ⻓度是1 0- 普通⽤⼾，1-组织者
@@ -53,12 +54,12 @@ public class UserDO {
         this.walletAddress = walletAddress;
     }
 
-    public String getJwt() {
-        return jwt;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setJwt(String jwt) {
-        this.jwt = jwt;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public UserTypeEnum getUserType() {
@@ -89,7 +90,7 @@ public class UserDO {
     public String toString() {
         return "UserDO{" +
                 "walletAddress='" + walletAddress + '\'' +
-                ", jwt='" + jwt + '\'' +
+                ", userId='" + userId + '\'' +
                 ", userType=" + userType +
                 ", createAt=" + createAt +
                 ", updatedAt=" + updatedAt +

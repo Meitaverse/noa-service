@@ -2,6 +2,7 @@ package me.bitsoul.noa.vo.resp;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
 /**
  * 【统一】平台的返回结果
@@ -9,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author lxbang
  * @create 2019/12/5 3:23 下午
  */
+@Data
 public class BaseResp {
 
     @JsonProperty("err_code")
@@ -16,27 +18,4 @@ public class BaseResp {
     @JsonProperty("msg")
     private String msg;
 
-    public Integer getErrCode() {
-        return errCode;
-    }
-
-    public void setErrCode(Integer errCode) {
-        this.errCode = errCode;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    @Override
-    public String toString() {
-        return "BaseResult{" +
-                "errCode=" + errCode +
-                ", msg='" + msg + '\'' +
-                '}';
-    }
 }

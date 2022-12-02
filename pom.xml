@@ -62,6 +62,14 @@
             <version>2.9.2</version>
         </dependency>
 
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- web3j -->
         <dependency>
             <groupId>org.web3j</groupId>
