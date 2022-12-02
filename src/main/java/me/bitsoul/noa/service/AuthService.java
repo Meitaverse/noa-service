@@ -1,5 +1,6 @@
 package me.bitsoul.noa.service;
 
+import me.bitsoul.noa.constant.AuthConstant;
 import me.bitsoul.noa.dto.UserDTO;
 import me.bitsoul.noa.dto.jwt.JwtDTO;
 import me.bitsoul.noa.exception.BusinessException;
@@ -52,8 +53,8 @@ public class AuthService {
      */
     private String generateJwt(UserDTO userDTO){
         Map<String,String> claimMap = new HashMap<>();
-        claimMap.put("user_id",userDTO.getUserId().toString());
-        claimMap.put("wallet_address",userDTO.getWalletAddress());
+        claimMap.put(AuthConstant.JWT_FIELD_USER_ID,userDTO.getUserId().toString());
+        claimMap.put(AuthConstant.JWT_FIELD_WALLET_ADDRESS,userDTO.getWalletAddress());
         JwtDTO jwtDTO = jwtUtils.generateJwt(claimMap, null);
         return jwtDTO.getJwt();
     }

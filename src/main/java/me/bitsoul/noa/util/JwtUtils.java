@@ -4,9 +4,11 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import me.bitsoul.noa.config.JwtConfig;
+import me.bitsoul.noa.constant.AuthConstant;
 import me.bitsoul.noa.dto.jwt.JwtDTO;
 import me.bitsoul.noa.exception.BusinessException;
 import org.slf4j.Logger;
@@ -70,13 +72,17 @@ public class JwtUtils {
      * @return
      */
     public Map<String,String> parseJwt(String jwt){
-        Map<String,String> result = new HashMap<>();
-        DecodedJWT decodedJWT = jwtVerifier.verify(jwt);
-        Map<String, Claim> claimMap = decodedJWT.getClaims();
-        for (String key : claimMap.keySet()){
-            result.put(key,claimMap.get(key).asString());
+        try {
+            Map<String,String> result = new HashMap<>();
+            DecodedJWT decodedJWT = jwtVerifier.verify(jwt);
+            Map<String, Claim> claimMap = decodedJWT.getClaims();
+            for (String key : claimMap.keySet()){
+                result.put(key,claimMap.get(key).asString());
+            }
+            return result;
+        } catch (JWTVerificationException e) {
+            throw new BusinessException(AuthConstant.RESP_CODE_INVALID_TOKEN,"无效的凭证");
         }
-        return result;
     }
 
 }

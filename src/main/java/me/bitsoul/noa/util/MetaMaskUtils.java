@@ -73,15 +73,4 @@ public class MetaMaskUtils {
         return match;
     }
 
-    public static void main(String[] args) {
-        //签名后的数据
-        String signature="0x53ea88d24f4ef8cdcc4bcc843912510b065cd6014c453ff61316c4cd75162f0a38f83a2103da028fb8e5181292ba194b0c8aa21a9ddacdf6783ebfa608889d121c";
-        //签名原文
-        String message="Hello Dapp";
-        //签名的钱包地址
-        String address="0xc290436b3da897115493a1547B52783c50f0Bef3";
-        Boolean result = validate(signature,message,address);
-        System.out.println(result);
-    }
-
 }
