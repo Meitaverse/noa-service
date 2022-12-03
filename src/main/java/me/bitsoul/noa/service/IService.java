@@ -4,6 +4,7 @@ import me.bitsoul.noa.exception.BusinessException;
 import org.springframework.beans.BeanUtils;
 
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
@@ -22,12 +23,21 @@ public interface IService<DO,DTO> {
             if (Objects.isNull(entry)){
                 return null;
             }
-            ParameterizedType genericSuperclass = (ParameterizedType) getClass().getGenericSuperclass();
-            Class<DTO> dtoClass = (Class<DTO>) genericSuperclass.getActualTypeArguments()[1];
-            DTO dto = dtoClass.newInstance();
-            BeanUtils.copyProperties(entry,dto);
-            return dto;
+            Type[] genericInterfaces = getClass().getGenericInterfaces();
+            for (Type genericInterface : genericInterfaces) {
+                String typeName = genericInterface.getTypeName();
+                if (typeName.startsWith(IService.class.getCanonicalName())){
+                    ParameterizedType parameterizedType = (ParameterizedType) genericInterface;
+                    Type[] typeArguments = parameterizedType.getActualTypeArguments();
+                    Class dtoClass = (Class) typeArguments[1];
+                    Object dto = dtoClass.newInstance();
+                    BeanUtils.copyProperties(entry,dto);
+                    return (DTO) dto;
+                }
+            }
+            return null;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BusinessException(500,"转换成dto失败！");
         }
     }

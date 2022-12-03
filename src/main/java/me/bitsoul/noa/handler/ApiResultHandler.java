@@ -66,6 +66,7 @@ public class ApiResultHandler implements ResponseBodyAdvice<BaseResp> {
         BaseResp baseResp = new BaseResp();
         baseResp.setErrCode(500);
         baseResp.setMsg("服务器异常！" + e.getMessage());
+        log.error("服务器异常！异常描述：{}",e.getMessage(),e);
         return baseResp;
     }
 

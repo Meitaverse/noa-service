@@ -8,10 +8,11 @@ import me.bitsoul.noa.enums.UserTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Service
-public class UserService implements IService<UserDO,UserDTO> {
+public class UserService implements Serializable, IService<UserDO,UserDTO> {
 
     @Autowired
     private UserDAO userDAO;
@@ -43,11 +44,9 @@ public class UserService implements IService<UserDO,UserDTO> {
         UserDO userDO = new UserDO();
         userDO.setWalletAddress(walletAddress);
         userDO.setUserType(userType);
-        Long id = idService.getId(IdSceneEnum.USER_ID);
+        Long id = idService.getNextId(IdSceneEnum.USER_ID);
         userDO.setUserId(id);
         return userDAO.save(userDO);
     }
-
-
 
 }

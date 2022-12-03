@@ -1,7 +1,8 @@
 package me.bitsoul.noa.filter;
 
+import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import me.bitsoul.noa.constant.AuthConstant;
-import me.bitsoul.noa.exception.BusinessException;
 import me.bitsoul.noa.util.JwtUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.Map;
 
 /**
@@ -19,6 +22,7 @@ import java.util.Map;
  */
 @Component
 @WebFilter(filterName = "authFilter", urlPatterns = { "/*" })
+@Slf4j
 public class AuthFilter implements Filter {
 
     public static final String TOKEN_NAME = "token";
@@ -35,10 +39,14 @@ public class AuthFilter implements Filter {
         if (servletPath.contains("/v1/")){
             String token = request.getHeader(TOKEN_NAME);
             if (StringUtils.isBlank(token)){
-                throw new BusinessException(AuthConstant.RESP_CODE_INVALID_TOKEN,"无效的凭证");
+                invalidTokenResp(servletResponse);
+                return;
             }
             Map<String, String> claimMap = jwtUtils.parseJwt(token);
-            request.setAttribute(AuthConstant.JWT_FIELD_USER_ID,claimMap.get(AuthConstant.JWT_FIELD_USER_ID));
+            String userIdStr = claimMap.get(AuthConstant.JWT_FIELD_USER_ID);
+            if (StringUtils.isNotBlank(userIdStr)){
+                request.setAttribute(AuthConstant.JWT_FIELD_USER_ID, Long.parseLong(userIdStr));
+            }
             request.setAttribute(AuthConstant.JWT_FIELD_WALLET_ADDRESS,claimMap.get(AuthConstant.JWT_FIELD_WALLET_ADDRESS));
         }
         filterChain.doFilter(request,servletResponse);
@@ -52,5 +60,33 @@ public class AuthFilter implements Filter {
     @Override
     public void destroy() {
 
+    }
+
+    /**
+     * 响应：无效的请求
+     * @param response
+     */
+    private void invalidTokenResp(ServletResponse response){
+        JSONObject result = new JSONObject();
+        result.put("err_code",AuthConstant.RESP_CODE_INVALID_TOKEN);
+        result.put("msg","无效的凭证");
+        returnResp(response,result.toJSONString());
+    }
+
+    /**
+     * 返回响应结果
+     * @param response
+     * @param resultJson
+     */
+    private void returnResp(ServletResponse response, String resultJson){
+        try (
+                OutputStream os = response.getOutputStream();
+                PrintWriter writer = new PrintWriter(os);
+        ) {
+            writer.write(resultJson);
+            writer.flush();
+        } catch (IOException e) {
+            log.error("filter返回响应结果失败！异常描述：{}",e.getMessage(),e);
+        }
     }
 }

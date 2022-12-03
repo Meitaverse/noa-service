@@ -6,12 +6,9 @@ spring:
     name: noa-service
 
 spring.data.mongodb:
-  authentication-database: minalogin
-  host: 127.0.0.1
+  host: mongodb
   port: 27017
-  database: MINALogin2
-  username: minalogin
-  password: minalogin
+  database: noa
 
 jwt:
   secret: noa@=9!

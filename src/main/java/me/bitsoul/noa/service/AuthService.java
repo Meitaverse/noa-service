@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author lxbang
@@ -31,13 +32,13 @@ public class AuthService {
      * @param signed
      */
     public SignInResp signIn(String wallerAddress, String signed){
-        final String message = "singIn";
-        boolean validate = MetaMaskUtils.validate(signed, message, wallerAddress);
-        if (!validate){
-            throw new BusinessException(400,"无效的签名");
-        }
+        // 验签
+        validSignIn(signed,wallerAddress);
         // 用户信息（自动创建）
         UserDTO userDTO = userService.getUserWithCreate(wallerAddress);
+        if (Objects.isNull(userDTO)){
+            throw new BusinessException(500,"获取用户失败");
+        }
         // 签发jwt
         String jwt = generateJwt(userDTO);
         // 返回数据
@@ -59,4 +60,20 @@ public class AuthService {
         return jwtDTO.getJwt();
     }
 
+    /**
+     * 有效的登录/注册
+     * @param signature
+     * @param walletAddress
+     * @return
+     */
+    public void validSignIn(String signature, String walletAddress){
+        final String message = "singIn";
+        boolean validate = false;
+        try {
+            validate = MetaMaskUtils.validate(signature, message, walletAddress);
+        } catch (Exception ignored){}
+        if (!validate){
+            throw new BusinessException(400,"无效的签名");
+        }
+    }
 }
