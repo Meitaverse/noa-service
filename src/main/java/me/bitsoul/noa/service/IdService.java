@@ -24,13 +24,11 @@ public class IdService {
      * @return
      */
     public Long getNextId(IdSceneEnum sceneEnum){
-        long nowId;
-        long nextId;
+        Long nextId;
         do {
             IdSequenceDO sequence = getWithCreate(sceneEnum);
-            nowId = sequence.getSerialNo();
-            nextId = idSequenceDAO.getNextId(sceneEnum.getVal(), nowId, 1);
-        } while (nowId == nextId);
+            nextId = idSequenceDAO.getSerialNo(sceneEnum.getVal(), sequence.getVersion(), 1);
+        } while (nextId == null);
         return nextId;
     }
 

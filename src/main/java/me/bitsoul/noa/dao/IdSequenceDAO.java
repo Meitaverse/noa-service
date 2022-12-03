@@ -8,6 +8,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
+import java.util.Objects;
+
 /**
  * @author lxbang
  * @create 2022/12/2 2:46 下午
@@ -34,22 +36,23 @@ public class IdSequenceDAO extends BaseDAO<IdSequenceDO> {
      * @return
      */
     public IdSequenceDO save(IdSequenceDO idSequence){
-        return insert(idSequence);
+        return super.insert(idSequence);
     }
 
     /**
-     * 获取新的id
+     * 获取新的序号
      * @param scene
-     * @param serialNo
+     * @param version
      * @param step
      * @return
      */
-    public Long getNextId(String scene,long serialNo,long step){
+    public Long getSerialNo(String scene, long version, long step){
         Query query = Query.query(Criteria.where(IdSequenceDO.FIELD_SCENE).is(scene)
-                .and(IdSequenceDO.FIELD_SERIAL_NO).is(serialNo));
+                .and(IdSequenceDO.FIELD_VERSION).is(version));
         Update update = new Update();
         update.inc(IdSequenceDO.FIELD_SERIAL_NO,step);
+        update.inc(IdSequenceDO.FIELD_VERSION,1);
         IdSequenceDO idSequence = super.findAndModify(query, update, FindAndModifyOptions.options().upsert(false).returnNew(true));
-        return idSequence.getSerialNo();
+        return Objects.isNull(idSequence) ? null : idSequence.getSerialNo();
     }
 }
