@@ -17,7 +17,7 @@ import java.io.UnsupportedEncodingException;
 @ConfigurationProperties(prefix = "jwt")
 public class JwtConfig {
 
-    private String secret;
+    private String secret ;
     private Long expirationSecond;
 
     @Bean

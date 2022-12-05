@@ -6,10 +6,14 @@ spring:
     name: noa-service
 
 spring.data.mongodb:
-  host: mongodb
+  host: 127.0.0.1
   port: 27017
   database: noa
 
 jwt:
   secret: noa@=9!
   expiration-second: 604800
+
+web3:
+  rpc_url: http://16.163.166.55:8545/
+  contract_address: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266

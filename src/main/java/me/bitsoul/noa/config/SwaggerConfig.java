@@ -43,11 +43,11 @@ public class SwaggerConfig {
         //用ApiInfoBuilder进行定制，可以设置不同的属性，比较方便
         return new ApiInfoBuilder()
                 //设置标题
-                .title("标题：springboot集成swagger测试")
+                .title("noa-service")
                 //描述
-                .description("描述：用于测试集成swagger接口")
+                .description("noa-service")
                 //作者信息
-                .contact(new Contact("zq", null, null))
+                .contact(new Contact("liu", null, null))
                 //版本
                 .version("版本号：1.0")
                 //构建
