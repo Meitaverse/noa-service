@@ -31,10 +31,7 @@ public class AuthFilter implements Filter {
 
     private static final String TOKEN_NAME = "token";
 
-    private static final List<String> WHITE_LIST = Lists.newArrayList(
-            "/swagger-ui.html",
-            "/signin"
-    );
+    private static final List<String> WHITE_LIST = Lists.newArrayList("/signin");
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -45,7 +42,7 @@ public class AuthFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String servletPath = request.getServletPath();
         try {
-            if (!WHITE_LIST.contains(servletPath)) {
+            if (!servletPath.contains("swagger") && !WHITE_LIST.contains(servletPath)) {
                 String token = request.getHeader(TOKEN_NAME);
                 Map<String, String> claimMap = jwtUtils.parseJwt(token);
                 String userIdStr = claimMap.get(SystemConstant.JWT_FIELD_USER_ID);
