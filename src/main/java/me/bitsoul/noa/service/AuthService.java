@@ -1,6 +1,6 @@
 package me.bitsoul.noa.service;
 
-import me.bitsoul.noa.constant.AuthConstant;
+import me.bitsoul.noa.constant.SystemConstant;
 import me.bitsoul.noa.dto.UserDTO;
 import me.bitsoul.noa.dto.jwt.JwtDTO;
 import me.bitsoul.noa.exception.BusinessException;
@@ -28,14 +28,18 @@ public class AuthService {
 
     /**
      * 注册登录
-     * @param wallerAddress
+     * @param walletAddress
      * @param signed
      */
-    public SignInResp signIn(String wallerAddress, String signed){
+    public SignInResp signIn(String walletAddress, String signed){
         // 验签
-        validSignIn(signed,wallerAddress);
+        try {
+            MetaMaskUtils.validate(signed, SystemConstant.ORIGINAL_MSG_SIGN_IN, walletAddress);
+        } catch (Exception e){
+            throw new BusinessException(400,"无效的签名");
+        }
         // 用户信息（自动创建）
-        UserDTO userDTO = userService.getUserWithCreate(wallerAddress);
+        UserDTO userDTO = userService.getUserWithCreate(walletAddress);
         if (Objects.isNull(userDTO)){
             throw new BusinessException(500,"获取用户失败");
         }
@@ -54,26 +58,10 @@ public class AuthService {
      */
     private String generateJwt(UserDTO userDTO){
         Map<String,String> claimMap = new HashMap<>();
-        claimMap.put(AuthConstant.JWT_FIELD_USER_ID,userDTO.getUserId().toString());
-        claimMap.put(AuthConstant.JWT_FIELD_WALLET_ADDRESS,userDTO.getWalletAddress());
+        claimMap.put(SystemConstant.JWT_FIELD_USER_ID,userDTO.getUserId().toString());
+        claimMap.put(SystemConstant.JWT_FIELD_WALLET_ADDRESS,userDTO.getWalletAddress());
         JwtDTO jwtDTO = jwtUtils.generateJwt(claimMap, null);
         return jwtDTO.getJwt();
     }
 
-    /**
-     * 有效的登录/注册
-     * @param signature
-     * @param walletAddress
-     * @return
-     */
-    public void validSignIn(String signature, String walletAddress){
-        final String message = "singIn";
-        boolean validate = false;
-        try {
-            validate = MetaMaskUtils.validate(signature, message, walletAddress);
-        } catch (Exception ignored){}
-        if (!validate){
-            throw new BusinessException(400,"无效的签名");
-        }
-    }
 }
