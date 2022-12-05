@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
@@ -28,8 +29,9 @@ public class Web3jConfig {
     private String rpcUrl;
     private String contractAddress;
     private Integer chainId;
-    private String contractAddressPrivateKey;
-    private String contractAddressPrivateKeyPath;
+    private BigInteger gesLimit;
+    private String deployerAddressPrivateKey;
+    private String deployerAddressPrivateKeyPath;
 
 
     @Bean
@@ -39,17 +41,17 @@ public class Web3jConfig {
 
     @Bean
     public Credentials credentials() throws IOException {
-        if (StringUtils.isNotBlank(contractAddressPrivateKey)) {
-            return Credentials.create(contractAddressPrivateKey);
+        if (StringUtils.isNotBlank(deployerAddressPrivateKey)) {
+            return Credentials.create(deployerAddressPrivateKey);
         } else {
-            return Credentials.create(StringUtils.join(Files.lines(Paths.get(contractAddressPrivateKeyPath))));
+            return Credentials.create(StringUtils.join(Files.lines(Paths.get(deployerAddressPrivateKeyPath))));
         }
     }
 
-//    @Bean
+    @Bean
     public NoaContract createGreeter(Web3j web3, TransactionManager transactionManager) throws Exception {
         BigInteger gasPrice = web3.ethGasPrice().send().getGasPrice();
-        return NoaContract.load(contractAddress, web3, transactionManager, new StaticGasProvider(gasPrice, BigInteger.valueOf(1)));
+        return NoaContract.load(contractAddress, web3, transactionManager, new StaticGasProvider(gasPrice, gesLimit));
     }
 
     @Bean
@@ -81,20 +83,19 @@ public class Web3jConfig {
         this.chainId = chainId;
     }
 
-    public String getContractAddressPrivateKey() {
-        return contractAddressPrivateKey;
+    public String getDeployerAddressPrivateKey() {
+        return deployerAddressPrivateKey;
     }
 
-    public void setContractAddressPrivateKey(String contractAddressPrivateKey) {
-        this.contractAddressPrivateKey = contractAddressPrivateKey;
+    public void setDeployerAddressPrivateKey(String deployerAddressPrivateKey) {
+        this.deployerAddressPrivateKey = deployerAddressPrivateKey;
     }
 
-    public String getContractAddressPrivateKeyPath() {
-        return contractAddressPrivateKeyPath;
+    public String getDeployerAddressPrivateKeyPath() {
+        return deployerAddressPrivateKeyPath;
     }
 
-    public void setContractAddressPrivateKeyPath(String contractAddressPrivateKeyPath) {
-        this.contractAddressPrivateKeyPath = contractAddressPrivateKeyPath;
+    public void setDeployerAddressPrivateKeyPath(String deployerAddressPrivateKeyPath) {
+        this.deployerAddressPrivateKeyPath = deployerAddressPrivateKeyPath;
     }
-
 }
