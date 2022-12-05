@@ -29,7 +29,6 @@ public class Web3jConfig {
     private String rpcUrl;
     private String contractAddress;
     private Integer chainId;
-    private BigInteger gesLimit;
     private String deployerAddressPrivateKey;
     private String deployerAddressPrivateKeyPath;
 
@@ -50,8 +49,7 @@ public class Web3jConfig {
 
     @Bean
     public NoaContract createGreeter(Web3j web3, TransactionManager transactionManager) throws Exception {
-        BigInteger gasPrice = web3.ethGasPrice().send().getGasPrice();
-        return NoaContract.load(contractAddress, web3, transactionManager, new StaticGasProvider(gasPrice, gesLimit));
+        return NoaContract.load(contractAddress, web3, transactionManager, new StaticGasProvider(BigInteger.valueOf(21000), null));
     }
 
     @Bean

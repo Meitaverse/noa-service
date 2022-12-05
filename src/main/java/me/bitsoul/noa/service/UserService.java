@@ -5,6 +5,7 @@ import me.bitsoul.noa.dto.UserDTO;
 import me.bitsoul.noa.entry.UserDO;
 import me.bitsoul.noa.enums.IdSceneEnum;
 import me.bitsoul.noa.enums.UserTypeEnum;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +47,10 @@ public class UserService implements IService<UserDO,UserDTO> {
         Long id = idService.getNextId(IdSceneEnum.USER_ID);
         userDO.setUserId(id);
         return userDAO.save(userDO);
+    }
+
+    public UserDTO getUser(String userId) {
+        return toDTO(userDAO.findByUserId(userId));
     }
 
 }

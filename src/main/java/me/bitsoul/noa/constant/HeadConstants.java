@@ -10,4 +10,7 @@ public class HeadConstants {
 
     public static final Integer INVALID_TOKEN_CODE = 40001;
     public static final String INVALID_TOKEN_MSG = "无效的凭证";
+
+    public static final Integer PARAM_ERROR_CODE = 40003;
+    public static final String PARAM_ERROR_MSG = "参数有误";
 }

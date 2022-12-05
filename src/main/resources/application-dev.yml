@@ -17,6 +17,5 @@ jwt:
 web3:
   rpc_url: http://16.163.166.55:8545
   chain_id: 31337
-  gas_limit: 23890
   contract_address: '0x0165878A594ca255338adfa4d48449f69242Eb8F'
   deployer_address_private_key_path: /noa/private_key/deployer
