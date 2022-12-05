@@ -9,7 +9,7 @@ import lombok.Data;
  * @author lxbang
  * @create 2022/12/2 4:51 下午
  */
-@ApiModel
+@ApiModel(value = "SignInResp",description = "注册/登录的响应结果")
 @Data
 public class SignInResp extends BaseResp {
 
