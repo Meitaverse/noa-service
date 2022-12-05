@@ -41,8 +41,11 @@ public class AuthFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String servletPath = request.getServletPath();
+        if(servletPath.contains("swagger")){
+            filterChain.doFilter(request, servletResponse);
+        }
         try {
-            if (!servletPath.contains("swagger") && !WHITE_LIST.contains(servletPath)) {
+            if (!WHITE_LIST.contains(servletPath)) {
                 String token = request.getHeader(TOKEN_NAME);
                 Map<String, String> claimMap = jwtUtils.parseJwt(token);
                 String userIdStr = claimMap.get(SystemConstant.JWT_FIELD_USER_ID);
