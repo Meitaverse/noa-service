@@ -3,6 +3,7 @@ package me.bitsoul.noa.vo.resp;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import me.bitsoul.noa.constant.SystemConstant;
 
 /**
  * 【统一】平台的返回结果
@@ -13,9 +14,9 @@ import lombok.Data;
 @Data
 public class BaseResp {
 
-    @JsonProperty("err_code")
+    @JsonProperty(SystemConstant.RESP_FIELD_CODE)
     private Integer errCode;
-    @JsonProperty("msg")
+    @JsonProperty(SystemConstant.RESP_FIELD_MSG)
     private String msg;
 
 }

@@ -1,8 +1,11 @@
 package me.bitsoul.noa.filter;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import me.bitsoul.noa.constant.AuthConstant;
+import me.bitsoul.noa.constant.SystemConstant;
+import me.bitsoul.noa.exception.BusinessException;
 import me.bitsoul.noa.util.JwtUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,7 +29,11 @@ import java.util.Map;
 @Slf4j
 public class AuthFilter implements Filter {
 
-    public static final String TOKEN_NAME = "token";
+    private static final String TOKEN_NAME = "token";
+    /**
+     * 请求白名单
+     */
+    private static final List<String> WHITE_LIST = Lists.newArrayList("/signin");
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -33,23 +41,29 @@ public class AuthFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        String servletPath = request.getServletPath();
-        // 约定：路径带：v1，则进行token验证
-        if (servletPath.contains("/v1/")){
-            String token = request.getHeader(TOKEN_NAME);
-            if (StringUtils.isBlank(token)){
-                invalidTokenResp(servletResponse);
-                return;
+        try {
+            HttpServletRequest request = (HttpServletRequest) servletRequest;
+            String servletPath = request.getServletPath();
+            if (!WHITE_LIST.contains(servletPath)){
+                String token = request.getHeader(TOKEN_NAME);
+                Map<String, String> claimMap = jwtUtils.parseJwt(token);
+                String userIdStr = claimMap.get(AuthConstant.JWT_FIELD_USER_ID);
+                if (StringUtils.isNotBlank(userIdStr)){
+                    request.setAttribute(AuthConstant.JWT_FIELD_USER_ID, Long.parseLong(userIdStr));
+                }
+                request.setAttribute(AuthConstant.JWT_FIELD_WALLET_ADDRESS,claimMap.get(AuthConstant.JWT_FIELD_WALLET_ADDRESS));
             }
-            Map<String, String> claimMap = jwtUtils.parseJwt(token);
-            String userIdStr = claimMap.get(AuthConstant.JWT_FIELD_USER_ID);
-            if (StringUtils.isNotBlank(userIdStr)){
-                request.setAttribute(AuthConstant.JWT_FIELD_USER_ID, Long.parseLong(userIdStr));
+            filterChain.doFilter(request,servletResponse);
+        } catch (Exception e) {
+            int code = 500;
+            String msg = "服务器异常";
+            if (e instanceof BusinessException){
+                BusinessException be = (BusinessException) e;
+                code = be.getCode();
+                msg = be.getMessage();
             }
-            request.setAttribute(AuthConstant.JWT_FIELD_WALLET_ADDRESS,claimMap.get(AuthConstant.JWT_FIELD_WALLET_ADDRESS));
+            returnResp(servletResponse,code,msg);
         }
-        filterChain.doFilter(request,servletResponse);
     }
 
     @Override
@@ -63,13 +77,15 @@ public class AuthFilter implements Filter {
     }
 
     /**
-     * 响应：无效的请求
+     * 返回响应结果
      * @param response
+     * @param errCode
+     * @param msg
      */
-    private void invalidTokenResp(ServletResponse response){
+    private void returnResp(ServletResponse response, int errCode, String msg){
         JSONObject result = new JSONObject();
-        result.put("err_code",AuthConstant.RESP_CODE_INVALID_TOKEN);
-        result.put("msg","无效的凭证");
+        result.put(SystemConstant.RESP_FIELD_CODE,errCode);
+        result.put(SystemConstant.RESP_FIELD_MSG,msg);
         returnResp(response,result.toJSONString());
     }
 
