@@ -1,27 +1,36 @@
 package me.bitsoul.noa.config;
 
-import me.bitsoul.noa.manager.cntract.Greeter;
-import org.springframework.beans.factory.annotation.Value;
+import me.bitsoul.noa.manager.cntract.NoaContract;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.RemoteFunctionCall;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.Contract;
 import org.web3j.tx.RawTransactionManager;
 import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.StaticGasProvider;
 
+import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Collections;
 
 @Configuration
+@ConfigurationProperties(prefix = "web3")
 public class Web3jConfig {
 
-    @Value(value = "${web3.rpc_url}")
     private String rpcUrl;
-
-    @Value(value = "${web3.contract_address}")
     private String contractAddress;
+    private Integer chainId;
+    private String contractAddressPrivateKey;
+    private String contractAddressPrivateKeyPath;
+
 
     @Bean
     public Web3j createWeb3j() {
@@ -29,18 +38,63 @@ public class Web3jConfig {
     }
 
     @Bean
-    public Credentials credentials() {
-        return Credentials.create("1223");
+    public Credentials credentials() throws IOException {
+        if (StringUtils.isNotBlank(contractAddressPrivateKey)) {
+            return Credentials.create(contractAddressPrivateKey);
+        } else {
+            return Credentials.create(StringUtils.join(Files.lines(Paths.get(contractAddressPrivateKeyPath))));
+        }
     }
 
-    @Bean
-    public Greeter createGreeter(Web3j web3, TransactionManager transactionManager) throws Exception {
+//    @Bean
+    public NoaContract createGreeter(Web3j web3, TransactionManager transactionManager) throws Exception {
         BigInteger gasPrice = web3.ethGasPrice().send().getGasPrice();
-        return Greeter.load(contractAddress, web3, transactionManager, new StaticGasProvider(gasPrice, Contract.GAS_LIMIT));
+        return NoaContract.load(contractAddress, web3, transactionManager, new StaticGasProvider(gasPrice, BigInteger.valueOf(1)));
     }
 
     @Bean
     public TransactionManager createTransactionManager(Web3j web3, Credentials credentials) {
-        return new RawTransactionManager(web3, credentials, 3);
+        return new RawTransactionManager(web3, credentials, chainId);
     }
+
+    public String getRpcUrl() {
+        return rpcUrl;
+    }
+
+    public void setRpcUrl(String rpcUrl) {
+        this.rpcUrl = rpcUrl;
+    }
+
+    public String getContractAddress() {
+        return contractAddress;
+    }
+
+    public void setContractAddress(String contractAddress) {
+        this.contractAddress = contractAddress;
+    }
+
+    public Integer getChainId() {
+        return chainId;
+    }
+
+    public void setChainId(Integer chainId) {
+        this.chainId = chainId;
+    }
+
+    public String getContractAddressPrivateKey() {
+        return contractAddressPrivateKey;
+    }
+
+    public void setContractAddressPrivateKey(String contractAddressPrivateKey) {
+        this.contractAddressPrivateKey = contractAddressPrivateKey;
+    }
+
+    public String getContractAddressPrivateKeyPath() {
+        return contractAddressPrivateKeyPath;
+    }
+
+    public void setContractAddressPrivateKeyPath(String contractAddressPrivateKeyPath) {
+        this.contractAddressPrivateKeyPath = contractAddressPrivateKeyPath;
+    }
+
 }
