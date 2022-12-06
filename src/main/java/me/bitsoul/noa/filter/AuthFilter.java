@@ -31,7 +31,7 @@ public class AuthFilter implements Filter {
 
     private static final String TOKEN_NAME = "token";
 
-    private static final List<String> WHITE_LIST = Lists.newArrayList("/signin");
+    private static final List<String> WHITE_LIST = Lists.newArrayList("/signin", "/v1/ask_for_noa");
 
     @Autowired
     private JwtUtils jwtUtils;
