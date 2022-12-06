@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.EthTransaction;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -61,8 +62,14 @@ public class NoAService implements IService<NoATokenDO, NoATokenDTO> {
         }
     }
 
-    public void check(String hash) throws Exception {
-        EthTransaction ethTransaction = web3j.ethGetTransactionByHash(hash).send();
+    public void checkMintSuccess() throws Exception {
+        List<NoATokenDO> tokenList = noATokenDAO.findClaimingNoaToken();
+        for (NoATokenDO token : tokenList) {
+            String tokenId = contractManager.getTokenIdByHash(token.getTransactionHash());
+            if (Objects.nonNull(tokenId)) {
+                noATokenDAO.tokenReceivedByHash(token.getTransactionHash(), tokenId);
+            }
+        }
 
     }
 }

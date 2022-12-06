@@ -1,0 +1,22 @@
+server:
+  port: 8360
+
+spring:
+  application:
+    name: noa-service
+
+spring.data.mongodb:
+  host: 127.0.0.1
+  port: 27017
+  database: noa
+
+jwt:
+  secret: noa@=9!
+  expiration-second: 604800
+
+web3:
+  rpc_url: http://16.163.166.55:8545/
+  chain_id: 31337
+  gas_limit: 23890
+  contract_address: '0x0165878A594ca255338adfa4d48449f69242Eb8F'
+  deployer_address_private_key: '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'

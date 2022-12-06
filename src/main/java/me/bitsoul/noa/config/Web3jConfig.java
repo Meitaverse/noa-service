@@ -44,7 +44,7 @@ public class Web3jConfig {
 
     @Bean
     public NoaContract createGreeter(Web3j web3, TransactionManager transactionManager) throws Exception {
-        return NoaContract.load(contractAddress, web3, transactionManager, new StaticGasProvider(BigInteger.valueOf(21000), null));
+        return NoaContract.load(contractAddress, web3, transactionManager, new StaticGasProvider(BigInteger.valueOf(39914082), BigInteger.valueOf(3000000)));
     }
 
     @Bean
