@@ -41,7 +41,7 @@ public class UserDAO extends BaseDAO<UserDO> {
         return insert(userDO);
     }
 
-    public UserDO findByUserId(String userId){
+    public UserDO findByUserId(Long userId){
         return findOne(Query.query(Criteria.where(UserDO.FIELD_USE_ID).is(userId)));
     }
 

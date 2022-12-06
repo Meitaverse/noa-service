@@ -49,7 +49,7 @@ public class UserService implements IService<UserDO,UserDTO> {
         return userDAO.save(userDO);
     }
 
-    public UserDTO getUser(String userId) {
+    public UserDTO getUser(Long userId) {
         return toDTO(userDAO.findByUserId(userId));
     }
 

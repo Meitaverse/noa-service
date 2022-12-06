@@ -1,4 +1,4 @@
-package me.bitsoul.noa.manager.cntract;
+package me.bitsoul.noa.manager.contract;
 
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;

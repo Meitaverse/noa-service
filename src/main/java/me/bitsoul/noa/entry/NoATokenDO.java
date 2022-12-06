@@ -15,6 +15,7 @@ public class NoATokenDO {
     public static final String FIELD_CLAIM_URL = "claim_url";
     public static final String FIELD_STATUS = "state";
     public static final String FIELD_TOKEN_ID = "token_id";
+    public static final String FIELD_TRANSACTION_HASH = "transaction_hash";
 
     /**
      * 勋章申请者的钱包地址
@@ -60,6 +61,12 @@ public class NoATokenDO {
      */
     @Field(FIELD_UPDATED_AT)
     private Long updatedAt;
+
+    /**
+     * 交易哈希
+     */
+    @Field(FIELD_TRANSACTION_HASH)
+    private String transactionHash;
 
 
     public String getToAddress() {
@@ -118,6 +125,14 @@ public class NoATokenDO {
         this.updatedAt = updatedAt;
     }
 
+    public String getTransactionHash() {
+        return transactionHash;
+    }
+
+    public void setTransactionHash(String transactionHash) {
+        this.transactionHash = transactionHash;
+    }
+
     @Override
     public String toString() {
         return "NoATokenDO{" +
@@ -128,6 +143,7 @@ public class NoATokenDO {
                 ", tokenId='" + tokenId + '\'' +
                 ", createAt=" + createAt +
                 ", updatedAt=" + updatedAt +
+                ", transactionHash='" + transactionHash + '\'' +
                 '}';
     }
 }
